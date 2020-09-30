@@ -1,0 +1,50 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: "2020-09-30T09:58:53Z"
+  labels:
+    app: api-server
+  managedFields:
+  - apiVersion: v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:labels:
+          .: {}
+          f:app: {}
+      f:spec:
+        f:externalTrafficPolicy: {}
+        f:ports:
+          .: {}
+          k:{"port":8088,"protocol":"TCP"}:
+            .: {}
+            f:port: {}
+            f:protocol: {}
+            f:targetPort: {}
+        f:selector:
+          .: {}
+          f:app: {}
+        f:sessionAffinity: {}
+        f:type: {}
+    manager: kubectl-expose
+    operation: Update
+    time: "2020-09-30T09:58:53Z"
+  name: api-server
+  namespace: default
+  resourceVersion: "7550"
+  selfLink: /api/v1/namespaces/default/services/api-server
+  uid: 24d3b154-3930-4ac0-ba6c-ebec1ae7dfe8
+spec:
+  clusterIP: 10.106.184.67
+  externalTrafficPolicy: Cluster
+  ports:
+  - nodePort: 30266
+    port: 8088
+    protocol: TCP
+    targetPort: 8088
+  selector:
+    app: api-server
+  sessionAffinity: None
+  type: NodePort
+status:
+  loadBalancer: {}
