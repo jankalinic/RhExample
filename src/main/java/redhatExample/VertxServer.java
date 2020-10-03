@@ -11,7 +11,7 @@ import java.util.UUID;
 
 public class VertxServer extends AbstractVerticle{
 
-    private final Vertx vertx = Vertx.vertx();
+
 
 
     @Override
@@ -20,12 +20,12 @@ public class VertxServer extends AbstractVerticle{
         String uniqueID = UUID.randomUUID().toString();
         String currentHostname =  InetAddress.getLocalHost().getHostName();
 
-        HttpServer server = vertx.createHttpServer(new HttpServerOptions().setHost("localhost").setPort(8088));
-        server.requestHandler(req -> {
+
+         vertx.createHttpServer().requestHandler(req -> {
             if (req.method() == HttpMethod.GET) {
                 req.response().end("hello from server ID: <" + uniqueID + "> with HOSTNAME: <" + currentHostname + ">");
             }
-        }).listen(8088,"localhost",futureResolver->{
+        }).listen(8088,"localhost",promiseHandler->{
             promise.complete();
         });
     }

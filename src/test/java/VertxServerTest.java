@@ -9,69 +9,66 @@ import io.vertx.core.Vertx;
 
 
 import io.vertx.ext.unit.TestContext;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.Test;
+import io.vertx.junit5.VertxTestContext;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import io.vertx.junit5.VertxExtension;
-import org.junit.runner.RunWith;
+
 
 
 import redhatExample.VertxServer;
 
-@RunWith(VertxUnitRunner.class)
+@ExtendWith(VertxExtension.class)
 public class VertxServerTest{
 
-
-    private static Vertx vertx = Vertx.vertx();
 
     int port = 8088;
     String host = "localhost";
     String uri = "/";
 
-    @BeforeAll
-    public static void setUp(TestContext context) {
+    @BeforeEach
+    public void setUp(Vertx vertx,VertxTestContext testContext) {
         System.out.println("Running @BeforeAll setUp now");
 
 
-        vertx.deployVerticle(VertxServer.class.getName(), context.asyncAssertSuccess());
+        vertx.deployVerticle(VertxServer.class.getName(), testContext.completing());
 
     }
 
     //@Ignore
     @Test
-    public void testGet(TestContext context) {
+    public void testGet(Vertx vertx,VertxTestContext testContext) {
         System.out.println("Running @Test testGet now");
 
-        Async async = context.async();
+
         WebClient client = WebClient.create(vertx);
 
         client  .get(port, host, uri)
                 .send(ar -> {
 
-                if (ar.succeeded()) {
+                    if (ar.succeeded()) {
 
-                    HttpResponse<Buffer> response = ar.result();
+                        HttpResponse<Buffer> response = ar.result();
 
-                    System.out.println("Odezva status Code: " + response.statusCode());
-                    System.out.println("----------SERVER RESPOND BODY--------");
-                    System.out.println(response.bodyAsString());
-                    System.out.println("-------------------------------------");
-                }
-                else {
-                    System.out.println("Chyba: " + ar.cause().getMessage());
-                }
-                async.complete();
-            });
+                        System.out.println("Odezva status Code: " + response.statusCode());
+                        System.out.println("----------SERVER RESPOND BODY--------");
+                        System.out.println(response.bodyAsString());
+                        System.out.println("-------------------------------------");
+                    }
+                    else {
+                        System.out.println("Chyba: " + ar.cause().getMessage());
+                    }
+                    testContext.completeNow();
+                });
     }
 
-    @AfterAll
-    public void tearDown(TestContext context) {
+    @AfterEach
+    public void tearDown(Vertx vertx,VertxTestContext testContext) {
         System.out.println("tearDown Vertx");
-        vertx.close(context.asyncAssertSuccess());
+        vertx.close(testContext.completing());
     }
 
 
