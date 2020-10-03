@@ -12,21 +12,34 @@ import java.util.UUID;
 public class VertxServer extends AbstractVerticle{
 
 
+    private static String uniqueID;
+    private static String currentHostname;
 
+    public static String getCurrentHostname() {
+        return currentHostname;
+    }
+
+    public static String getUniqueID() {
+        return uniqueID;
+    }
 
     @Override
     public void start(Promise<Void> promise) throws UnknownHostException {
 
-        String uniqueID = UUID.randomUUID().toString();
-        String currentHostname =  InetAddress.getLocalHost().getHostName();
-
+        uniqueID = UUID.randomUUID().toString();
+        currentHostname =  InetAddress.getLocalHost().getHostName();
 
          vertx.createHttpServer().requestHandler(req -> {
             if (req.method() == HttpMethod.GET) {
                 req.response().end("hello from server ID: <" + uniqueID + "> with HOSTNAME: <" + currentHostname + ">");
             }
         }).listen(8088,"localhost",promiseHandler->{
-            promise.complete();
+            if(promiseHandler.succeeded()){
+                promise.complete();
+            }
+            else{
+                promise.fail(promiseHandler.cause().getMessage());
+            }
         });
     }
 
