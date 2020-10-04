@@ -15,13 +15,9 @@ public class VertxServer extends AbstractVerticle{
     private static String uniqueID;
     private static String currentHostname;
 
-    public static String getCurrentHostname() {
-        return currentHostname;
-    }
+    public String getCurrentHostname() { return currentHostname; }
 
-    public static String getUniqueID() {
-        return uniqueID;
-    }
+    public String getUniqueID() { return uniqueID; }
 
     @Override
     public void start(Promise<Void> promise) throws UnknownHostException {
